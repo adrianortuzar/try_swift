@@ -19,16 +19,26 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
+        let refreshControl : UIRefreshControl = UIRefreshControl.init()
+        refreshControl.tintColor = UIColor.purple
+        //refreshControl.addTarget(self, action:Selector("refershControlAction"), for:UIControlEventValueChanged)
+        self.addSubview(refreshControl)
+
+        
+        self.backgroundColor = UIColor.clear
+        
+        // register cell
+        self.register(CollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
+        
+        // register footer
+        self.register(FooterCollectionReusableView.self, forSupplementaryViewOfKind:UICollectionElementKindSectionFooter, withReuseIdentifier:"footerCell")
+        
+        self.register(UINib(nibName: "FooterCollectionReusableView", bundle: nil), forSupplementaryViewOfKind:UICollectionElementKindSectionFooter, withReuseIdentifier: "footerCell")
+        
         self.delegate = self;
         self.dataSource = self;
         
-        
-        self.register(CollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clear
-        
-        // square
-        //self.backgroundView?.addSubview(self.loadingView)
     }
     
     lazy var loadingView : UIView = {
@@ -51,10 +61,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         
         let item : Dictionary <String, AnyObject> = self.items[indexPath.row] as! Dictionary
         
-        cell.nameLabel.text = item["face"] as! String
-        // Use the outlet in our custom class to get a reference to the UILabel in the cell
-        //cell.myLabel.text = self.items[indexPath.item]
-        //cell.backgroundColor = UIColor.cyan // make cell more visible in our example project
+        cell.nameLabel.text = item["face"] as? String
         
         return cell
     }
@@ -66,39 +73,36 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         print("You selected cell #\(indexPath.item)!")
     }
     
-    var counterDegress : Int = 0
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let height = scrollView.contentSize.height - scrollView.frame.size.height
         let offsetY = scrollView.contentOffset.y
         if (offsetY > height){
             // do next call
-            //print("AAA")
-            print(offsetY - height);            
             
-            
-            self.counterDegress += 2
-            
-            UIView.animate(withDuration: 0, animations: {
-                let radians : CGFloat = self.degressToRadians(degress: CGFloat(self.counterDegress))
-                print(radians)
-                
-                self.loadingView.transform = CGAffineTransform(rotationAngle: radians)
-            })
         }
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        if (self.isOutScroll()){
-//            print("outscroll")
-//            
-//            let height = self.collectionView.contentSize.height - self.collectionView.frame.size.height
-//            //self.collectionView.contentSize.height = self.collectionView.contentSize.height + 50
-//            let point : CGPoint = CGPoint.init(x: self.collectionView.contentOffset.x, y: height + 50)
-//            self.collectionView.setContentOffset(point, animated: true)
-//            //self.collectionView.setContentOffset(CGPoint(self.collectionView.contentOffset.x, height + 50), animated: true)
-//        }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        var reusableview : UICollectionReusableView = UICollectionReusableView.init()
+        if (kind == UICollectionElementKindSectionFooter){
+            let footerview : FooterCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footerCell", for: indexPath) as! FooterCollectionReusableView
+            
+            footerview.loadingView.startAnimating()
+            
+            reusableview = footerview
+        }
+        
+        return reusableview
     }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 referenceSizeForFooterInSection section: Int) -> CGSize
+    {
+        return CGSize.init(width: self.frame.size.width, height: 50)
+    }
+    
     
     func degressToRadians(degress:CGFloat) -> CGFloat {
         return (degress * .pi)/180

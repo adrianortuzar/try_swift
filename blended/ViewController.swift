@@ -11,7 +11,7 @@ import Alamofire
 
 class ViewController: UIViewController {
     
-    //var items : NSMutableArray = []
+    @IBOutlet weak var loadingView: UIActivityIndicatorView!
     
     @IBOutlet weak var collectionView: CollectionView!
     
@@ -19,9 +19,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-
         
+        self.loadingView.startAnimating()
         
+        self.collectionView.isHidden = true
         
         self.requestApi()
     }
@@ -31,19 +32,17 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-    var inProgress : Bool = false
+    var requestInProgress : Bool = false
     
     var skyp : Int = 0
     
     func requestApi() {
         
-        if (self.inProgress) {
+        if (self.requestInProgress) {
             return
         }
         
-        self.inProgress = true;
+        self.requestInProgress = true;
         
         // start
         
@@ -62,12 +61,16 @@ class ViewController: UIViewController {
                 }
                 
             }
-            //print(self.collectionView.items)
+            
             self.collectionView.reloadData()
             
             self.skyp = self.skyp + 10
             
-            self.inProgress = false;
+            self.requestInProgress = false;
+            
+            self.loadingView.isHidden = true
+            
+            self.collectionView.isHidden = false
         }
     }
     
