@@ -10,12 +10,16 @@ import UIKit
 
 class CollectionViewLayout: UICollectionViewLayout {
     
+    
     override func prepare() {
         
     }
     
     override var collectionViewContentSize: CGSize {
-        return CGSize.init(width: self.collectionView!.frame.size.width, height: 3000)
+        
+        
+        let collection : CollectionView = self.collectionView! as! CollectionView
+        return CGSize.init(width: self.collectionView!.frame.size.width, height: collection.height)
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {

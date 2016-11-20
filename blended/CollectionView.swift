@@ -14,6 +14,8 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     
     public var items : NSMutableArray = []
     
+    public var height : CGFloat = 3000.0
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         

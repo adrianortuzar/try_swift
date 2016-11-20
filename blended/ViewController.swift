@@ -84,7 +84,12 @@ class ViewController: UIViewController {
     
     
     @IBAction func buttonaction(_ sender: Any) {
-        self.requestApi()
+        //self.requestApi()
+        
+//        self.collectionView.height = 1500.0
+//        self.collectionView.reloadData()
+        //self.collectionView.contentSize = CGSize.init(width: self.collectionView.frame.size.width, height: 1500)
+        //self.collectionView.collectionViewLayout.collectionViewContentSize = CGSize.init(width: self.collectionView.frame.size.width, height: 1500)
     }
     
     
