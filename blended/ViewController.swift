@@ -14,6 +14,23 @@ class ViewController: UIViewController, CollectionViewDelegate {
     
     @IBOutlet weak var collectionView: CollectionView!
     
+    public var tagString : String = ""
+    
+    init(tag: String){
+        
+        super.init(nibName: "ViewController", bundle: nil)
+        
+        self.tagString = tag
+        
+        self.title = {
+            return (tag.isEmpty) ? "Products" : tag
+        }()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,7 +38,7 @@ class ViewController: UIViewController, CollectionViewDelegate {
         
         self.requestApi()
         
-        self.title = "Products"
+        //self.title = "Products"
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,7 +60,7 @@ class ViewController: UIViewController, CollectionViewDelegate {
         
         // start
         
-        let url : String = "http://74.50.59.155:5000/api/search&skip=\(self.skyp)"
+        let url : String = "http://74.50.59.155:5000/api/search?skip=\(self.skyp)&q=" + self.tagString
         
         Alamofire.request(url).responseString { response in
             
@@ -52,7 +69,17 @@ class ViewController: UIViewController, CollectionViewDelegate {
                 
             }
             
-            let arr : [String] = responsstring.components(separatedBy: "\n")
+            var arr : [String] = responsstring.components(separatedBy: "\n")
+            
+            // remove last item if is empty string
+            if ( arr.count != 0 && (arr[arr.count - 1] as String).isEmpty ){
+                arr.remove(at: arr.count - 1)
+            }
+            
+            // hide loading if there is no more products
+            if  arr.count < 10 {
+                self.collectionView.hideFooter = true
+            }
             
             print(responsstring)
             

@@ -47,11 +47,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AVH-VD-QcD" userLabel="tagsContainer">
+                                <rect key="frame" x="8" y="32" width="234" height="24"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="8n7-gq-8J5"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="64" id="2M0-FP-fuq"/>
+                            <constraint firstItem="AVH-VD-QcD" firstAttribute="top" secondItem="Esj-BP-fwm" secondAttribute="bottom" constant="3" id="4yW-L7-2HH"/>
+                            <constraint firstAttribute="trailing" secondItem="AVH-VD-QcD" secondAttribute="trailing" constant="8" id="ASi-pv-u9J"/>
                             <constraint firstAttribute="bottom" secondItem="Esj-BP-fwm" secondAttribute="bottom" constant="35" id="Bz0-sN-L4b"/>
+                            <constraint firstItem="AVH-VD-QcD" firstAttribute="leading" secondItem="smt-aA-Nqv" secondAttribute="leading" constant="8" id="FGe-g8-zNY"/>
+                            <constraint firstAttribute="bottom" secondItem="AVH-VD-QcD" secondAttribute="bottom" constant="8" id="JvD-hl-OOO"/>
                             <constraint firstItem="Esj-BP-fwm" firstAttribute="leading" secondItem="tTQ-Fh-hjz" secondAttribute="trailing" constant="8" id="QLE-YE-LaI"/>
                             <constraint firstAttribute="trailing" secondItem="Esj-BP-fwm" secondAttribute="trailing" constant="8" id="tha-DD-Ntj"/>
                             <constraint firstAttribute="bottom" secondItem="tTQ-Fh-hjz" secondAttribute="bottom" constant="35" id="wjd-q9-i0p"/>
@@ -100,6 +111,7 @@
                 <outlet property="priceLabel" destination="s94-Yq-Nd3" id="ENU-1e-rdb"/>
                 <outlet property="sizeLabel" destination="tTQ-Fh-hjz" id="EW8-76-qn9"/>
                 <outlet property="stockLabel" destination="Esj-BP-fwm" id="66p-60-lse"/>
+                <outlet property="tagsContainer" destination="AVH-VD-QcD" id="OyN-1t-dDE"/>
             </connections>
             <point key="canvasLocation" x="-75" y="88.5"/>
         </collectionViewCell>

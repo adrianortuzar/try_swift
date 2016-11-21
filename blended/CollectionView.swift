@@ -22,6 +22,8 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     
     public var height : CGFloat = 3000.0
     
+    public var hideFooter : Bool = false
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
@@ -72,6 +74,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         return cell
     }
     
+    
     // MARK: - UICollectionViewDelegate protocol
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -91,6 +94,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         var reusableview : UICollectionReusableView = UICollectionReusableView.init()
+        
         if (kind == UICollectionElementKindSectionFooter){
             let footerview : FooterCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footerCell", for: indexPath) as! FooterCollectionReusableView
             
@@ -106,7 +110,15 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
                                  layout collectionViewLayout: UICollectionViewLayout,
                                  referenceSizeForFooterInSection section: Int) -> CGSize
     {
-        return CGSize.init(width: self.frame.size.width, height: 50)
+        let height : CGFloat = {
+            if self.hideFooter {
+                return 0
+            }
+            else{
+                return 50
+            }
+        }()
+        return CGSize.init(width: self.frame.size.width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -116,8 +128,4 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         return CGSize.init(width: self.frame.size.width, height: 250)
     }
     
-    
-    func degressToRadians(degress:CGFloat) -> CGFloat {
-        return (degress * .pi)/180
-    }
 }
