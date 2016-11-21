@@ -25,10 +25,10 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        let refreshControl : UIRefreshControl = UIRefreshControl.init()
-        refreshControl.tintColor = UIColor.purple
+//        let refreshControl : UIRefreshControl = UIRefreshControl.init()
+//        refreshControl.tintColor = UIColor.purple
         //refreshControl.addTarget(self, action:Selector("refershControlAction"), for:UIControlEventValueChanged)
-        self.addSubview(refreshControl)
+        //self.addSubview(refreshControl)
 
         
         self.backgroundColor = UIColor.clear
@@ -67,7 +67,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         
         let item : Dictionary <String, AnyObject> = self.items[indexPath.row] as! Dictionary
         
-        cell.nameLabel.text = item["face"] as? String
+        cell.setup(dictionary: item)
         
         return cell
     }
@@ -107,6 +107,13 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
                                  referenceSizeForFooterInSection section: Int) -> CGSize
     {
         return CGSize.init(width: self.frame.size.width, height: 50)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAtIndexPath:NSIndexPath) -> CGSize
+    {
+        return CGSize.init(width: self.frame.size.width, height: 250)
     }
     
     
