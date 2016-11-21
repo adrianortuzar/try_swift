@@ -15,7 +15,7 @@ class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var stockLabel: UILabel!
-    @IBOutlet weak var tagsLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -28,21 +28,25 @@ class CollectionViewCell: UICollectionViewCell {
         self.priceLabel.text = String((dictionary["price"] as? Int)!) + "€"
         self.sizeLabel.text = "Size: " + String((dictionary["size"] as? Int)!)
         
-        self.tagsLabel.text = {
-            var tags : String = ""
-            
-            for tag : String in (dictionary["tags"] as? Array)! {
-                if  (tags.isEmpty){
-                    tags = tag
-                }
-                else {
-                    tags = tags + ", " + tag
-                }
-                
-            }
-            return tags
-        }()
+//        self.tagsLabel.text = {
+//            var tags : String = ""
+//            
+//            for tag : String in (dictionary["tags"] as? Array)! {
+//                if  (tags.isEmpty){
+//                    tags = tag
+//                }
+//                else {
+//                    tags = tags + ", " + tag
+//                }
+//                
+//            }
+//            return tags
+//        }()
     }
     
+    
+    func printTags(tags: Array<String>) {
+        
+    }
 
 }
