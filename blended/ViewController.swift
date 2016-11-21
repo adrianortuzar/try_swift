@@ -11,7 +11,6 @@ import Alamofire
 
 class ViewController: UIViewController, CollectionViewDelegate {
     
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
     
     @IBOutlet weak var collectionView: CollectionView!
     
@@ -21,6 +20,8 @@ class ViewController: UIViewController, CollectionViewDelegate {
         self.collectionView.collectionViewdelegate = self
         
         self.requestApi()
+        
+        self.title = "Products"
     }
 
     override func didReceiveMemoryWarning() {
@@ -81,26 +82,7 @@ class ViewController: UIViewController, CollectionViewDelegate {
             return [:]
         }
     }
-    
-    
-    @IBAction func buttonaction(_ sender: Any) {
-        //self.requestApi()
-        
-//        self.collectionView.height = 1500.0
-//        self.collectionView.reloadData()
-        //self.collectionView.contentSize = CGSize.init(width: self.collectionView.frame.size.width, height: 1500)
-        //self.collectionView.collectionViewLayout.collectionViewContentSize = CGSize.init(width: self.collectionView.frame.size.width, height: 1500)
-    }
-    
-    
-    
-    func isOutScroll() -> Bool {
-        let height = self.collectionView.contentSize.height - self.collectionView.frame.size.height
-        let offsetY = self.collectionView.contentOffset.y
-        
-        return (offsetY > height) ? true : false
-    }
-    
+
     
     func CollectionViewDidFinishScroll(collectionView: CollectionView) {
         self.requestApi()
