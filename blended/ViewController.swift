@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CollectionViewDelegate {
     
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     
@@ -18,11 +18,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        self.loadingView.startAnimating()
-        
-        self.collectionView.isHidden = true
+        self.collectionView.collectionViewdelegate = self
         
         self.requestApi()
     }
@@ -50,16 +46,20 @@ class ViewController: UIViewController {
         
         Alamofire.request(url).responseString { response in
             
-            let responsstring : String = response.result.value!;
+            let responsstring : String = response.result.value!
+            if  (responsstring.isEmpty){
+                
+            }
             
             let arr : [String] = responsstring.components(separatedBy: "\n")
+            
+            print(responsstring)
             
             for string in arr {
                 let dic : NSDictionary = self.stringToJson(string:string) as NSDictionary
                 if( dic.allKeys.count != 0 ){
                     self.collectionView.items.add(dic)
                 }
-                
             }
             
             self.collectionView.reloadData()
@@ -67,10 +67,7 @@ class ViewController: UIViewController {
             self.skyp = self.skyp + 10
             
             self.requestInProgress = false;
-            
-            self.loadingView.isHidden = true
-            
-            self.collectionView.isHidden = false
+    
         }
     }
     
@@ -105,7 +102,9 @@ class ViewController: UIViewController {
     }
     
     
-    
+    func CollectionViewDidFinishScroll(collectionView: CollectionView) {
+        self.requestApi()
+    }
     
 }
 

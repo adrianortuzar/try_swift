@@ -8,8 +8,14 @@
 
 import UIKit
 
+protocol CollectionViewDelegate{
+    func CollectionViewDidFinishScroll(collectionView:CollectionView)
+}
+
 class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource {
 
+    var collectionViewdelegate:CollectionViewDelegate! = nil
+    
     let reuseIdentifier = "cell"
     
     public var items : NSMutableArray = []
@@ -77,8 +83,8 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         let height = scrollView.contentSize.height - scrollView.frame.size.height
         let offsetY = scrollView.contentOffset.y
         if (offsetY > height){
-            // do next call
-            
+            // finish scroll
+            self.collectionViewdelegate!.CollectionViewDidFinishScroll(collectionView: self)
         }
     }
     
