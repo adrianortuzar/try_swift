@@ -9,12 +9,19 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, CollectionViewDelegate {
+class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDelegate {
     
+    @IBOutlet weak var emptySearchLabel: UILabel!
+    
+    @IBOutlet weak var searchBar: UISearchBar!
     
     @IBOutlet weak var collectionView: CollectionView!
     
     public var tagString : String = ""
+    
+    public var itemsLoaded : NSMutableArray = []
+    
+    public var isSearching : Bool = false
     
     init(tag: String){
         
@@ -36,9 +43,11 @@ class ViewController: UIViewController, CollectionViewDelegate {
         
         self.collectionView.collectionViewdelegate = self
         
+        self.emptySearchLabel.isHidden = true
+        
         self.requestApi()
         
-        //self.title = "Products"
+        self.searchBar.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,7 +61,7 @@ class ViewController: UIViewController, CollectionViewDelegate {
     
     func requestApi() {
         
-        if (self.requestInProgress) {
+        if (self.requestInProgress || self.isSearching) {
             return
         }
         
@@ -86,10 +95,12 @@ class ViewController: UIViewController, CollectionViewDelegate {
             for string in arr {
                 let dic : NSDictionary = self.stringToJson(string:string) as NSDictionary
                 if( dic.allKeys.count != 0 ){
-                    self.collectionView.items.add(dic)
+                    self.itemsLoaded.add(dic)
                 }
             }
             
+            // set collectionview
+            self.collectionView.items = self.itemsLoaded;
             self.collectionView.reloadData()
             
             self.skyp = self.skyp + 10
@@ -114,6 +125,59 @@ class ViewController: UIViewController, CollectionViewDelegate {
     func CollectionViewDidFinishScroll(collectionView: CollectionView) {
         self.requestApi()
     }
+    
+    func CollectionViewDidSelectTag(tagName: String){
+        if  tagName != self.tagString {
+            
+            let vc = ViewController.init(tag: tagName)
+            let navigationController =  UIApplication.shared.windows[0].rootViewController as! UINavigationController
+            
+            if  self.tagString.isEmpty {
+                
+                navigationController.pushViewController(vc, animated: true)
+            }
+            else {
+                navigationController.popToRootViewController(animated: false)
+                navigationController.pushViewController(vc, animated: true)
+            }
+            
+        }
+        
+    }
+    
+    // MARK: UISearch delegate
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if(searchText.isEmpty){
+            self.searchBarTextDidEndEditing(searchBar)
+            return
+        }
+        
+        self.isSearching = true
+        self.collectionView.hideFooter = true
+        
+        let predicate : NSPredicate = NSPredicate(format: "face contains[c] %@", searchText)
+        let reslt : [Any] = self.itemsLoaded.filtered(using: predicate)
+        
+        self.emptySearchLabel.isHidden = (reslt.count == 0) ? false : true
+        
+        self.collectionView.items = NSMutableArray.init(array: reslt)
+        self.collectionView.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.isSearching = false
+        
+        self.emptySearchLabel.isHidden = true
+        
+        //
+        self.collectionView.items = self.itemsLoaded
+        self.collectionView.reloadData()
+        self.collectionView.hideFooter = false
+    }
+    
+    
     
 }
 

@@ -8,9 +8,19 @@
 
 import UIKit
 
+protocol CollectionViewCellDelegate{
+    
+    func CollectionViewCellDidSelectTag(tagName:String)
+    
+}
+
 class CollectionViewCell: UICollectionViewCell {
+    
+    var collectionViewCellDelegate : CollectionViewCellDelegate! = nil
 
     @IBOutlet weak public var nameLabel: UILabel!
+    
+    @IBOutlet weak var priceContainer: UIView!
     
     @IBOutlet weak var tagsContainer: UIView!
     @IBOutlet weak var priceLabel: UILabel!
@@ -20,6 +30,8 @@ class CollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        self.priceContainer.layer.cornerRadius = 32.5
     }
     
     public func setup(dictionary: Dictionary<String, AnyObject>) {
@@ -49,15 +61,19 @@ class CollectionViewCell: UICollectionViewCell {
             //var originalString: String = "Some text is just here..."
             let myString: NSString = tag as NSString
             let size: CGSize = myString.size(attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 17.0)])
-            
+        
             //
-            let frame : CGRect = CGRect.init(x: x, y: 0, width: size.width, height: self.tagsContainer.frame.size.height)
-            x += size.width + 15
+            let frame : CGRect = CGRect.init(x: x, y: 0, width: size.width + 10, height: self.tagsContainer.frame.size.height)
+            x += size.width + 10 + 10
             let button : UIButton = UIButton.init(frame: frame)
+            button.backgroundColor = UIColor.blue
             button.titleLabel!.font =  UIFont.systemFont(ofSize: 17.0)
             button.setTitle(tag, for: UIControlState.normal)
-            button.setTitleColor(UIColor.blue, for: UIControlState.normal)
+            button.setTitleColor(UIColor.white, for: UIControlState.normal)
             button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+            button.titleEdgeInsets = UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 5)
+            button.layer.cornerRadius = 5
+    
             
             self.tagsContainer.addSubview(button)
         }
@@ -68,9 +84,9 @@ class CollectionViewCell: UICollectionViewCell {
         let button : UIButton = sender as UIButton
         let tag : String = (button.titleLabel?.text)!
         
-        let vc = ViewController.init(tag: tag)
-        let navigationController =  UIApplication.shared.windows[0].rootViewController as! UINavigationController
-        navigationController.pushViewController(vc, animated: true)
+        self.collectionViewCellDelegate!.CollectionViewCellDidSelectTag(tagName:tag)
+        
+        
     }
 
 }

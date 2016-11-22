@@ -21,7 +21,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bnY-5m-vE5">
                         <rect key="frame" x="0.0" y="0.0" width="250" height="113"/>
                         <fontDescription key="fontDescription" type="system" pointSize="52"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" red="0.21797817980463152" green="0.23214190458381623" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="smt-aA-Nqv">
@@ -34,7 +34,7 @@
                                     <constraint firstAttribute="width" constant="75" id="pkO-ao-0Hl"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" white="0.87072172619047616" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stock" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Esj-BP-fwm">
@@ -44,18 +44,17 @@
                                     <constraint firstAttribute="width" constant="77" id="Ob8-r6-Urk"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" white="0.87072172619047616" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AVH-VD-QcD" userLabel="tagsContainer">
                                 <rect key="frame" x="8" y="32" width="234" height="24"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="8n7-gq-8J5"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="64" id="2M0-FP-fuq"/>
                             <constraint firstItem="AVH-VD-QcD" firstAttribute="top" secondItem="Esj-BP-fwm" secondAttribute="bottom" constant="3" id="4yW-L7-2HH"/>
@@ -75,12 +74,12 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s94-Yq-Nd3">
                                 <rect key="frame" x="8" y="8" width="49" height="49"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.33684098639455784" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="s94-Yq-Nd3" secondAttribute="trailing" constant="8" id="5nD-z4-Q3k"/>
                             <constraint firstAttribute="height" constant="65" id="D0h-sK-aH2"/>
@@ -92,7 +91,7 @@
                     </view>
                 </subviews>
             </view>
-            <color key="backgroundColor" red="1" green="0.42822597789115646" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="smt-aA-Nqv" firstAttribute="top" secondItem="bnY-5m-vE5" secondAttribute="bottom" id="6ZC-OS-6kb"/>
                 <constraint firstAttribute="bottom" secondItem="myo-A2-yyW" secondAttribute="bottom" constant="35" id="7jK-iM-Iit"/>
@@ -108,6 +107,7 @@
             <size key="customSize" width="250" height="177"/>
             <connections>
                 <outlet property="nameLabel" destination="bnY-5m-vE5" id="0vD-lm-Bj4"/>
+                <outlet property="priceContainer" destination="myo-A2-yyW" id="Bl8-CR-EeT"/>
                 <outlet property="priceLabel" destination="s94-Yq-Nd3" id="ENU-1e-rdb"/>
                 <outlet property="sizeLabel" destination="tTQ-Fh-hjz" id="EW8-76-qn9"/>
                 <outlet property="stockLabel" destination="Esj-BP-fwm" id="66p-60-lse"/>

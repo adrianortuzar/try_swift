@@ -9,10 +9,15 @@
 import UIKit
 
 protocol CollectionViewDelegate{
+    
     func CollectionViewDidFinishScroll(collectionView:CollectionView)
+    
+    func CollectionViewDidSelectTag(tagName:String)
+    
 }
 
-class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource {
+
+class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, CollectionViewCellDelegate {
 
     var collectionViewdelegate:CollectionViewDelegate! = nil
     
@@ -26,11 +31,6 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-//        let refreshControl : UIRefreshControl = UIRefreshControl.init()
-//        refreshControl.tintColor = UIColor.purple
-        //refreshControl.addTarget(self, action:Selector("refershControlAction"), for:UIControlEventValueChanged)
-        //self.addSubview(refreshControl)
 
         
         self.backgroundColor = UIColor.clear
@@ -70,6 +70,8 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         let item : Dictionary <String, AnyObject> = self.items[indexPath.row] as! Dictionary
         
         cell.setup(dictionary: item)
+        
+        cell.collectionViewCellDelegate = self
         
         return cell
     }
@@ -125,7 +127,11 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAtIndexPath:NSIndexPath) -> CGSize
     {
-        return CGSize.init(width: self.frame.size.width, height: 250)
+        return CGSize.init(width: self.frame.size.width, height: 200)
+    }
+    
+    func CollectionViewCellDidSelectTag(tagName: String){
+        self.collectionViewdelegate!.CollectionViewDidSelectTag(tagName: tagName)
     }
     
 }
