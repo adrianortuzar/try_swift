@@ -1,12 +1,21 @@
 PODS:
-  - Alamofire (4.1.0)
+  - Alamofire (4.0.1)
+  - PromiseKit/CorePromise (4.0.4)
+  - PromiseKit/UIKit (4.0.4):
+    - PromiseKit/CorePromise
+  - UsabillaFeedbackForm (3.0.0):
+    - Alamofire (~> 4.0.0)
+    - PromiseKit/CorePromise (~> 4.0.0)
+    - PromiseKit/UIKit (~> 4.0.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.1)
+  - UsabillaFeedbackForm (~> 3.0)
 
 SPEC CHECKSUMS:
-  Alamofire: e266cf991b933498df791e645e0d8ac294492153
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  PromiseKit: 8e8ee39d33ff199d92a1a883b5396f6285be6c91
+  UsabillaFeedbackForm: c9707dbe04fefbc9c030f11febce73016f721b7f
 
-PODFILE CHECKSUM: f8cee3c9c372ea1a4dc93c31e0536e9c71d18fbd
+PODFILE CHECKSUM: ad1419c7cb93ddbb74be802cdf3c75eb3c6bddc5
 
 COCOAPODS: 1.1.1

@@ -100,7 +100,7 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
             }
             
             // set collectionview
-            self.collectionView.items = self.itemsLoaded;
+            self.collectionView.items = self.itemsLoaded
             self.collectionView.reloadData()
             
             self.skyp = self.skyp + 10
