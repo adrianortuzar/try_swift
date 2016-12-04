@@ -9,19 +9,25 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate, CollectionViewCellDelegate {
     
     @IBOutlet weak var emptySearchLabel: UILabel!
     
     @IBOutlet weak var searchBar: UISearchBar!
     
-    @IBOutlet weak var collectionView: CollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     public var tagString : String = ""
     
     public var itemsLoaded : NSMutableArray = []
     
     public var isSearching : Bool = false
+    
+    public var items : NSMutableArray = []
+    
+    public var hideFooter : Bool = false
+    
+    let reuseIdentifier = "cell"
     
     init(tag: String){
         
@@ -41,13 +47,23 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.collectionView.collectionViewdelegate = self
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
         
         self.emptySearchLabel.isHidden = true
         
         self.requestApi()
         
         self.searchBar.delegate = self
+        
+        // register cell
+        self.collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
+        
+        // register footer
+        self.collectionView.register(FooterCollectionReusableView.self, forSupplementaryViewOfKind:UICollectionElementKindSectionFooter, withReuseIdentifier:"footerCell")
+        
+        self.collectionView.register(UINib(nibName: "FooterCollectionReusableView", bundle: nil), forSupplementaryViewOfKind:UICollectionElementKindSectionFooter, withReuseIdentifier: "footerCell")
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,7 +103,7 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
             
             // hide loading if there is no more products
             if  arr.count < 10 {
-                self.collectionView.hideFooter = true
+                self.hideFooter = true
             }
             
             print(responsstring)
@@ -100,7 +116,7 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
             }
             
             // set collectionview
-            self.collectionView.items = self.itemsLoaded
+            self.items = self.itemsLoaded
             self.collectionView.reloadData()
             
             self.skyp = self.skyp + 10
@@ -122,7 +138,7 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
     }
 
     
-    func CollectionViewDidFinishScroll(collectionView: CollectionView) {
+    func CollectionViewDidFinishScroll() {
         self.requestApi()
     }
     
@@ -145,6 +161,27 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
         
     }
     
+    // MARK: UICollectionView delegate
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.items.count
+    }
+    
+    // make a cell for each cell index path
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        // get a reference to our storyboard cell
+        let cell : CollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as! CollectionViewCell
+        
+        let item : Dictionary <String, AnyObject> = self.items[indexPath.row] as! Dictionary
+        
+        cell.setup(dictionary: item)
+        
+        cell.collectionViewCellDelegate = self
+        
+        return cell
+    }
+    
     // MARK: UISearch delegate
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -155,14 +192,14 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
         }
         
         self.isSearching = true
-        self.collectionView.hideFooter = true
+        self.hideFooter = true
         
         let predicate : NSPredicate = NSPredicate(format: "face contains[c] %@", searchText)
         let reslt : [Any] = self.itemsLoaded.filtered(using: predicate)
         
         self.emptySearchLabel.isHidden = (reslt.count == 0) ? false : true
         
-        self.collectionView.items = NSMutableArray.init(array: reslt)
+        self.items = NSMutableArray.init(array: reslt)
         self.collectionView.reloadData()
     }
     
@@ -172,12 +209,67 @@ class ViewController: UIViewController, CollectionViewDelegate, UISearchBarDeleg
         self.emptySearchLabel.isHidden = true
         
         //
-        self.collectionView.items = self.itemsLoaded
+        self.items = self.itemsLoaded
         self.collectionView.reloadData()
-        self.collectionView.hideFooter = false
+        self.hideFooter = false
     }
     
+    func CollectionViewCellDidSelectTag(tagName: String){
+        self.CollectionViewDidSelectTag(tagName: tagName)
+    }
     
+    // MARK: - UICollectionViewDelegate protocol
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // handle tap events
+        print("You selected cell #\(indexPath.item)!")
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.contentSize.height - scrollView.frame.size.height
+        let offsetY = scrollView.contentOffset.y
+        if (offsetY > height){
+            // finish scroll
+            self.CollectionViewDidFinishScroll()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        var reusableview : UICollectionReusableView = UICollectionReusableView.init()
+        
+        if (kind == UICollectionElementKindSectionFooter){
+            let footerview : FooterCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footerCell", for: indexPath) as! FooterCollectionReusableView
+            
+            footerview.loadingView.startAnimating()
+            
+            reusableview = footerview
+        }
+        
+        return reusableview
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForFooterInSection section: Int) -> CGSize
+    {
+        let height : CGFloat = {
+            if self.hideFooter {
+                return 0
+            }
+            else{
+                return 50
+            }
+        }()
+        return CGSize.init(width: self.collectionView.frame.size.width, height: height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAtIndexPath:NSIndexPath) -> CGSize
+    {
+        return CGSize.init(width: self.collectionView.frame.size.width, height: 200)
+    }
+
 }
 
