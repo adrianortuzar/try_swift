@@ -9,7 +9,8 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate, CollectionViewCellDelegate {
+
+class ViewController: UIViewController {
     
     @IBOutlet weak var emptySearchLabel: UILabel!
     
@@ -19,11 +20,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     public var tagString : String = ""
     
-    public var itemsLoaded : NSMutableArray = []
+    public var itemsLoaded : [[String:AnyObject]] = []
+    
+    public var items : [[String:AnyObject]] = []
     
     public var isSearching : Bool = false
-    
-    public var items : NSMutableArray = []
     
     public var hideFooter : Bool = false
     
@@ -109,9 +110,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             print(responsstring)
             
             for string in arr {
-                let dic : NSDictionary = self.stringToJson(string:string) as NSDictionary
-                if( dic.allKeys.count != 0 ){
-                    self.itemsLoaded.add(dic)
+                let dic : [String:AnyObject] = self.stringToJson(string:string) as [String:AnyObject]
+                
+                if( dic.keys.count != 0 ){
+                    self.itemsLoaded.append(dic)
                 }
             }
             
@@ -160,8 +162,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
         
     }
+}
+
+// MARK: UICollectionViewDataSource
+
+extension ViewController : UICollectionViewDataSource {
     
-    // MARK: UICollectionView delegate
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.items.count
@@ -173,7 +179,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         // get a reference to our storyboard cell
         let cell : CollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as! CollectionViewCell
         
-        let item : Dictionary <String, AnyObject> = self.items[indexPath.row] as! Dictionary
+        let item : [String: AnyObject] = self.items[indexPath.row]
         
         cell.setup(dictionary: item)
         
@@ -181,44 +187,13 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         return cell
     }
+}
+
+// MARK: - UICollectionViewDelegate protocol
+
+extension ViewController : UICollectionViewDelegate {
     
-    // MARK: UISearch delegate
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if(searchText.isEmpty){
-            self.searchBarTextDidEndEditing(searchBar)
-            return
-        }
-        
-        self.isSearching = true
-        self.hideFooter = true
-        
-        let predicate : NSPredicate = NSPredicate(format: "face contains[c] %@", searchText)
-        let reslt : [Any] = self.itemsLoaded.filtered(using: predicate)
-        
-        self.emptySearchLabel.isHidden = (reslt.count == 0) ? false : true
-        
-        self.items = NSMutableArray.init(array: reslt)
-        self.collectionView.reloadData()
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.isSearching = false
-        
-        self.emptySearchLabel.isHidden = true
-        
-        //
-        self.items = self.itemsLoaded
-        self.collectionView.reloadData()
-        self.hideFooter = false
-    }
-    
-    func CollectionViewCellDidSelectTag(tagName: String){
-        self.CollectionViewDidSelectTag(tagName: tagName)
-    }
-    
-    // MARK: - UICollectionViewDelegate protocol
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // handle tap events
@@ -270,6 +245,51 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     {
         return CGSize.init(width: self.collectionView.frame.size.width, height: 200)
     }
-
+    
 }
 
+
+// MARK: UISearch delegate
+
+extension ViewController : UISearchBarDelegate {
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if(searchText.isEmpty){
+            self.searchBarTextDidEndEditing(searchBar)
+            return
+        }
+        
+        self.isSearching = true
+        self.hideFooter = true
+        
+        let reslt = self.itemsLoaded.filter {
+            let str : String = $0["face"] as! String
+            return str.contains(searchText)
+        }
+        
+        self.emptySearchLabel.isHidden = (reslt.count == 0) ? false : true
+        
+        self.items = reslt
+        self.collectionView.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.isSearching = false
+        
+        self.emptySearchLabel.isHidden = true
+        
+        //
+        self.items = self.itemsLoaded
+        self.collectionView.reloadData()
+        self.hideFooter = false
+    }
+}
+
+extension ViewController : CollectionViewCellDelegate {
+    
+    func CollectionViewCellDidSelectTag(tagName: String){
+        self.CollectionViewDidSelectTag(tagName: tagName)
+    }
+}

@@ -34,7 +34,7 @@ class CollectionViewCell: UICollectionViewCell {
         self.priceContainer.layer.cornerRadius = 32.5
     }
     
-    public func setup(dictionary: Dictionary<String, AnyObject>) {
+    public func setup(dictionary: [String:AnyObject]) {
         self.nameLabel.text = dictionary["face"] as? String
         
         self.stockLabel.text = "Stock: " + String((dictionary["stock"] as? Int)!)
@@ -46,9 +46,9 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     
-    func printTags(tags: Array<String>) {
+    func printTags(tags: [String]) {
         // remove all buttons
-        let subviews : Array<UIView> = self.tagsContainer.subviews
+        let subviews : [UIView] = self.tagsContainer.subviews
         for view : UIView in subviews {
             view.removeFromSuperview()
         }
@@ -59,7 +59,7 @@ class CollectionViewCell: UICollectionViewCell {
             //var tagNSString : NSString = tag as NSString
             
             //var originalString: String = "Some text is just here..."
-            let myString: NSString = tag as NSString
+            let myString: String = tag as String
             let size: CGSize = myString.size(attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 17.0)])
         
             //
