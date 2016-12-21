@@ -9,31 +9,11 @@
 import Foundation
 import Alamofire
 
-class HttpService {
+struct HttpService {
     
-    var skyp : Int = 0
-    
-    var inProgress : Bool = false
-    
-    var items : [[String:AnyObject]] = []
-    
-    var tag : String?
-    
-    init(tag: String) {
-        self.tag = tag
-    }
+    static func getData(skip: Int, tag: String, _ completion: @escaping (_ items : [[String:AnyObject]]) -> Void) {
         
-    func getData (_ completion: @escaping () -> Void) {
-        
-        if (self.inProgress) {
-            return
-        }
-        
-        self.inProgress = true;
-        
-        // start
-        
-        let url : String = "http://74.50.59.155:5000/api/search?skip=\(self.skyp)&q=" + self.tag!
+        let url : String = "http://74.50.59.155:5000/api/search?skip=\(skip)&q=" + tag
         
         Alamofire.request(url).responseString { response in
             
@@ -52,23 +32,22 @@ class HttpService {
             
             print(responsstring)
             
+            var items : [[String:AnyObject]] = []
+            
             for string in arr {
-                let dic : [String:AnyObject] = self.stringToJson(string) as [String:AnyObject]
+                let dic : [String:AnyObject] = HttpService.stringToJson(string) as [String:AnyObject]
                 
                 if( dic.keys.count != 0 ){
-                    self.items.append(dic)
+                    items.append(dic)
                 }
             }
             
-            self.skyp = self.skyp + 10
-            
-            self.inProgress = false;
-            
-            completion()
+            completion(items)
         }
+    
     }
     
-    func stringToJson(_ string: String) -> Dictionary <String, AnyObject>  {
+    static func stringToJson(_ string: String) -> Dictionary <String, AnyObject>  {
         let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)!
         do {
             let json : Dictionary = try JSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
