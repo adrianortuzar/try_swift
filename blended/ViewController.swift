@@ -17,7 +17,6 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var tagString : String = ""
     
     var items : [[String:AnyObject]] = []
     
@@ -27,11 +26,13 @@ class ViewController: UIViewController {
     
     let reuseIdentifier = "cell"
     
+    var httpService : HttpService?
+    
     init(tag: String){
         
         super.init(nibName: "ViewController", bundle: nil)
         
-        self.tagString = tag
+        self.httpService = HttpService.init(tag: tag)
         
         self.title = {
             return (tag.isEmpty) ? "Products" : tag
@@ -79,14 +80,14 @@ class ViewController: UIViewController {
             return
         }
         
-        HttpService.getData(withTag: self.tagString) {
+        self.httpService!.getData() {
             // hide loading if there is no more products
-            if  HttpService.items.count < 10 {
+            if  self.httpService!.items.count < 10 {
                 self.hideFooter = true
             }
             
             // set collectionview
-            self.items = HttpService.items
+            self.items = self.httpService!.items
             self.collectionView.reloadData()
         }
     }
@@ -108,12 +109,12 @@ class ViewController: UIViewController {
     }
     
     func CollectionViewDidSelectTag(tagName: String){
-        if  tagName != self.tagString {
+        if  tagName != self.httpService!.tag {
             
             let vc = ViewController.init(tag: tagName)
             let navigationController =  UIApplication.shared.windows[0].rootViewController as! UINavigationController
             
-            if  self.tagString.isEmpty {
+            if  self.httpService!.tag!.isEmpty {
                 
                 navigationController.pushViewController(vc, animated: true)
             }
@@ -227,7 +228,7 @@ extension ViewController : UISearchBarDelegate {
         self.isSearching = true
         self.hideFooter = true
         
-        let reslt = HttpService.items.filter {
+        let reslt = self.httpService!.items.filter {
             let str : String = $0["face"] as! String
             return str.contains(searchText)
         }
@@ -244,7 +245,7 @@ extension ViewController : UISearchBarDelegate {
         self.emptySearchLabel.isHidden = true
         
         //
-        self.items = HttpService.items
+        self.items = self.httpService!.items
         self.collectionView.reloadData()
         self.hideFooter = false
     }

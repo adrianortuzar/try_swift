@@ -9,25 +9,31 @@
 import Foundation
 import Alamofire
 
-struct HttpService {
+class HttpService {
     
-    static var skyp : Int = 0
+    var skyp : Int = 0
     
-    static var inProgress : Bool = false
+    var inProgress : Bool = false
     
-    static var items : [[String:AnyObject]] = []
+    var items : [[String:AnyObject]] = []
+    
+    var tag : String?
+    
+    init(tag: String) {
+        self.tag = tag
+    }
         
-    static func getData (withTag tag:String,_ completion: @escaping () -> Void) {
+    func getData (_ completion: @escaping () -> Void) {
         
-        if (HttpService.inProgress) {
+        if (self.inProgress) {
             return
         }
         
-        HttpService.inProgress = true;
+        self.inProgress = true;
         
         // start
         
-        let url : String = "http://74.50.59.155:5000/api/search?skip=\(HttpService.skyp)&q=" + tag
+        let url : String = "http://74.50.59.155:5000/api/search?skip=\(self.skyp)&q=" + self.tag!
         
         Alamofire.request(url).responseString { response in
             
@@ -47,22 +53,22 @@ struct HttpService {
             print(responsstring)
             
             for string in arr {
-                let dic : [String:AnyObject] = HttpService.stringToJson(string) as [String:AnyObject]
+                let dic : [String:AnyObject] = self.stringToJson(string) as [String:AnyObject]
                 
                 if( dic.keys.count != 0 ){
-                    HttpService.items.append(dic)
+                    self.items.append(dic)
                 }
             }
             
-            HttpService.skyp = HttpService.skyp + 10
+            self.skyp = self.skyp + 10
             
-            HttpService.inProgress = false;
+            self.inProgress = false;
             
             completion()
         }
     }
     
-    static func stringToJson(_ string: String) -> Dictionary <String, AnyObject>  {
+    func stringToJson(_ string: String) -> Dictionary <String, AnyObject>  {
         let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)!
         do {
             let json : Dictionary = try JSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
