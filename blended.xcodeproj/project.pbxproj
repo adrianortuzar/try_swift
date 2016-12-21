@@ -18,6 +18,7 @@
 		493B74051DE1C0F2000D55FA /* FooterCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B74041DE1C0F2000D55FA /* FooterCollectionReusableView.swift */; };
 		493B74071DE20525000D55FA /* FooterCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 493B74061DE20525000D55FA /* FooterCollectionReusableView.xib */; };
 		493B74091DE31733000D55FA /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 493B74081DE31733000D55FA /* ViewController.xib */; };
+		49E028A91E0AE7330043122A /* HttpService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E028A81E0AE7330043122A /* HttpService.swift */; };
 		8A183129CD4EAB936C856F7F /* Pods_blended.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E64881FCDA585D6CF5D686 /* Pods_blended.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		493B74041DE1C0F2000D55FA /* FooterCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterCollectionReusableView.swift; sourceTree = "<group>"; };
 		493B74061DE20525000D55FA /* FooterCollectionReusableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FooterCollectionReusableView.xib; sourceTree = "<group>"; };
 		493B74081DE31733000D55FA /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		49E028A81E0AE7330043122A /* HttpService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpService.swift; sourceTree = "<group>"; };
 		60E64881FCDA585D6CF5D686 /* Pods_blended.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_blended.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76727EA069C49612CA744924 /* Pods-blended.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-blended.release.xcconfig"; path = "Pods/Target Support Files/Pods-blended/Pods-blended.release.xcconfig"; sourceTree = "<group>"; };
 		DF2CCCE745F182A21DFDD370 /* Pods_blendedUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_blendedUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +133,7 @@
 				491A61EC1DDF2B2A00E9B5E1 /* CollectionViewCell.xib */,
 				493B74041DE1C0F2000D55FA /* FooterCollectionReusableView.swift */,
 				493B74061DE20525000D55FA /* FooterCollectionReusableView.xib */,
+				49E028A81E0AE7330043122A /* HttpService.swift */,
 				492EF28E1DDCBBC70012A43D /* Assets.xcassets */,
 				492EF2901DDCBBC70012A43D /* LaunchScreen.storyboard */,
 				492EF2931DDCBBC70012A43D /* Info.plist */,
@@ -359,6 +362,7 @@
 				492EF2881DDCBBC70012A43D /* AppDelegate.swift in Sources */,
 				493B74051DE1C0F2000D55FA /* FooterCollectionReusableView.swift in Sources */,
 				491A61ED1DDF2B2A00E9B5E1 /* CollectionViewCell.swift in Sources */,
+				49E028A91E0AE7330043122A /* HttpService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

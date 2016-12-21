@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 
 class ViewController: UIViewController {
@@ -18,15 +17,13 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    public var tagString : String = ""
+    var tagString : String = ""
     
-    public var itemsLoaded : [[String:AnyObject]] = []
+    var items : [[String:AnyObject]] = []
     
-    public var items : [[String:AnyObject]] = []
+    var isSearching : Bool = false
     
-    public var isSearching : Bool = false
-    
-    public var hideFooter : Bool = false
+    var hideFooter : Bool = false
     
     let reuseIdentifier = "cell"
     
@@ -78,53 +75,19 @@ class ViewController: UIViewController {
     
     func requestApi() {
         
-        if (self.requestInProgress || self.isSearching) {
+        if (self.isSearching) {
             return
         }
         
-        self.requestInProgress = true;
-        
-        // start
-        
-        let url : String = "http://74.50.59.155:5000/api/search?skip=\(self.skyp)&q=" + self.tagString
-        
-        Alamofire.request(url).responseString { response in
-            
-            let responsstring : String = response.result.value!
-            if  (responsstring.isEmpty){
-                
-            }
-            
-            var arr : [String] = responsstring.components(separatedBy: "\n")
-            
-            // remove last item if is empty string
-            if ( arr.count != 0 && (arr[arr.count - 1] as String).isEmpty ){
-                arr.remove(at: arr.count - 1)
-            }
-            
+        HttpService.getData(withTag: self.tagString) {
             // hide loading if there is no more products
-            if  arr.count < 10 {
+            if  HttpService.items.count < 10 {
                 self.hideFooter = true
             }
             
-            print(responsstring)
-            
-            for string in arr {
-                let dic : [String:AnyObject] = self.stringToJson(string:string) as [String:AnyObject]
-                
-                if( dic.keys.count != 0 ){
-                    self.itemsLoaded.append(dic)
-                }
-            }
-            
             // set collectionview
-            self.items = self.itemsLoaded
+            self.items = HttpService.items
             self.collectionView.reloadData()
-            
-            self.skyp = self.skyp + 10
-            
-            self.requestInProgress = false;
-    
         }
     }
     
@@ -264,7 +227,7 @@ extension ViewController : UISearchBarDelegate {
         self.isSearching = true
         self.hideFooter = true
         
-        let reslt = self.itemsLoaded.filter {
+        let reslt = HttpService.items.filter {
             let str : String = $0["face"] as! String
             return str.contains(searchText)
         }
@@ -281,7 +244,7 @@ extension ViewController : UISearchBarDelegate {
         self.emptySearchLabel.isHidden = true
         
         //
-        self.items = self.itemsLoaded
+        self.items = HttpService.items
         self.collectionView.reloadData()
         self.hideFooter = false
     }
